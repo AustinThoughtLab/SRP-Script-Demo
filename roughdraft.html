@@ -52,19 +52,68 @@
 		var habituation_procedure = {
 		  timeline: [habituation_fixation, habituation],
 		  timeline_variables: habituation_stimuli,
-		  repetitions: 3,
-		  randomize_order: true
+		  randomize_order: true,
+		 repetitions: 3,
+			trial_duration: 6500
 			
 		}
 		timeline.push(habituation_procedure);
 		
+		//description of what the subject is about to hear (test)//
+		var test_instructions = {
+		  type: "html-keyboard-response",
+		    stimulus: "<p>Now you're going to choose if the tone you hear is short or long.</p>" +
+		            "<p>Press 'f' if you think the tone you hear sounds more like the short tone.</p>" +
+		            "<p>Press 'j' if you think the tone you hear sounds more like the long tone.</p>" +
+		            "<p>Press any key to begin.</p>"
+		};
+		timeline.push(test_instructions);
+		
+		//array for different test stimuli//
+		var test_stimuli = [
+		  { audio: "sound/3.5ms.mp3"},
+		  { audio: "sound/5.5ms.mp3"}
+		];
+		//fixation cross for test (longer)//
+		var test_fixation = {
+		  type: 'html-keyboard-response',
+		  stimulus: '<div style="font-size:60px;">+</div>',
+		  choices: jsPsych.NO_KEYS,
+		  trial_duration: 3000
+		}
+		var test = {
+		  type: "audio-keyboard-response",
+		  stimulus: jsPsych.timelineVariable('audio'),
+		  choices: ['f', 'j'],
+			prompt: "<p>Press 'f' if you think the tone you hear sounds more like the short tone.</p>" +
+					"<p>Press 'j' if you think the tone you hear sounds more like the long tone.<p>"
+		}
+		
+		var test_procedure = {
+		  timeline: [test_fixation, test],
+		  timeline_variables: test_stimuli,
+		  repetitions: 3,
+		  randomize_order: true,
+			response_ends_trial: true
+		}
+		timeline.push(test_procedure);
+		
+	  //end message//
+	    var ending = {
+	      	type: "html-keyboard-response",
+	      	stimulus: "<p>Thank you for participating in this game! You can go get your sticker and prize now!</p>"
+	    };
+	    timeline.push(ending);
+
+
+
 		
 		
 		
 		jsPsych.init({
 			timeline: timeline,
 			use_webaudio: false,
-			preload_audio: ['sound/3ms.mp3', 'sound/6ms.mp3']
+			preload_audio: ['sound/3ms.mp3', 'sound/6ms.mp3', 'sound/3.5ms.mp3', 'sound/5.5ms.mp3']
 		})
 		
 		
