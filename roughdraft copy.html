@@ -25,7 +25,6 @@
 			  var subject_number = responses.Q0;
 			  var participant_id = responses.Q1;
 			  jsPsych.data.addProperties({subjectNumber: subject_number, participantID: participant_id});
-			  jsPsych.data.get().localSave('csv','subject_number.csv'); // Saves a file on the computer running the experiment. First localSave argument is the format, second is the filename.
 		  }
 		};
 		timeline.push(participant_info);
@@ -53,8 +52,8 @@
 		];
 
 		//fixation cross for habituation (shorter)//
-		var habituation_fixation = {
-		  type: 'html-keyboard-response',
+		var trial= {
+		  type: "html-keyboard-response",
 		  stimulus: '<div style="font-size:60px;">+</div>',
 		  choices: jsPsych.NO_KEYS,
 		  trial_duration: 1500,
@@ -68,7 +67,7 @@
 		}
 
 		var habituation_procedure = {
-		  timeline: [habituation_fixation, habituation],
+		  timeline: [trial, habituation],
 		  timeline_variables: habituation_stimuli,
 		  randomize_order: true,
 		 repetitions: 3,
@@ -90,11 +89,12 @@
 		//array for different test stimuli//
 		var test_stimuli = [
 		  { audio: "sound/1.5s.mp3"},
-		  { audio: "sound/2s.mp3"},
-      { audio: "sound/2.5s.mp3"},
-      { audio: "sound/3s.mp3"},
-      {audio: "sound/3.5s.mp3"}
+		  { audio: "sound/2s.mp3"}, 
+		  { audio: "sound/2.5s.mp3"},
+		  { audio: "sound/3s.mp3"},
+		  { audio: "sound/3.5s.mp3"}
 		];
+
 		//fixation cross for test (longer)//
 		var test_fixation = {
 		  type: 'html-keyboard-response',
@@ -107,7 +107,10 @@
 		  stimulus: jsPsych.timelineVariable('audio'),
 		  choices: ['f', 'j'],
 			prompt: "<p>Press 'f' if you think the tone you hear sounds more like the short tone.</p>" +
-					"<p>Press 'j' if you think the tone you hear sounds more like the long tone.<p>"
+					"<p>Press 'j' if you think the tone you hear sounds more like the long tone.<p>";
+      type: 'html-keyboard-response',
+      stimulus: 'img/blue.png',
+
 		}
 
 		var test_procedure = {
@@ -132,6 +135,8 @@
 			preload_audio: ['sound/1s.mp3', 'sound/1.5s.mp3', 'sound/2s.mp3', 'sound/2.5s.mp3', 'sound/3s.mp3', 'sound/3.5s.mp3', 'sound/4s.mp3'],
 
 		})
+
+
 
 	</script>
 </html>
