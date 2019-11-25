@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>My experiment</title>
+		<script src="jspsych-6.0.5/jspsych.js"></script>
+		<script src="jspsych-6.0.5/plugins/jspsych-survey-text.js"></script>
+		<script src="jspsych-6.0.5/plugins/jspsych-html-keyboard-response.js"></script>
+		<script src="jspsych-6.0.5/plugins/jspsych-audio-keyboard-response.js"></script>
+		<link href="jspsych-6.0.5/css/jspsych.css" rel="stylesheet" type="text/css"></link>
+    </head>
+    <body></body>
+	<script>
+		//create timeline array//
+		var timeline = [];
+		//input and store particpant info//
+		var participant_info = {
+		  type: 'survey-text',
+		  questions: [
+		    {prompt: "Subject Number"},
+		    {prompt: "Participant ID"}
+		  ],
+		  on_finish: function(data){
+			  var responses = JSON.parse(data.responses);
+			  var subject_number = responses.Q0;
+			  var participant_id = responses.Q1;
+			  jsPsych.data.addProperties({subjectNumber: subject_number, participantID: participant_id});
+			  jsPsych.data.get().localSave('csv','subject_number.csv'); // Saves a file on the computer running the experiment. First localSave argument is the format, second is the filename.
+		  }
+		};
+
+		//welcome message//
+		var welcome = {
+			type: 'html-keyboard-response',
+			stimulus: 'Welcome to the experiment! Press any key to begin.'
+		};
+
+		//description of what the subject is about to hear (habituation)//
+		var habituation_instructions = {
+			type: "html-keyboard-response",
+	    	stimulus: "<p>You are about to hear two types of tones, a short tone and a long tone.</p>" +
+	              "<p>After each tone, a screen will tell you what type of tone it was.</p>" +
+	              "<p>Press any key to begin.</p>"
+		};
+
+		//array for different habituation stimuli//
+		var habituation_stimuli = [
+		  { audio: "sound/1s.mp3", prompt: 'This is a short tone.'},
+		  { audio: "sound/4s.mp3", prompt: 'This is a long tone.'}
+		];
+		//fixation cross for habituation (shorter)//
+		var habituation_fixation = {
+		  type: 'html-keyboard-response',
+		  stimulus: '<div style="font-size:60px;">+</div>',
+		  choices: jsPsych.NO_KEYS,
+		  trial_duration: 1500,
+		}
+		var habituation = {
+		  type: "audio-keyboard-response",
+		  stimulus: jsPsych.timelineVariable('audio'),
+		  choices: jsPsych.NO_KEYS,
+			prompt: jsPsych.timelineVariable('prompt')
+		}
+		var habituation_procedure = {
+		  timeline: [habituation_fixation, habituation],
+		  timeline_variables: habituation_stimuli,
+		  randomize_order: true,
+		 repetitions: 3,
+			trial_ends_after_audio: true
+		}
+
+		//description of what the subject is about to hear (test)//
+		var test_instructions = {
+		  type: "html-keyboard-response",
+		    stimulus: "<p>Now you're going to choose if the tone you hear is short or long.</p>" +
+		            "<p>Press 'f' if you think the tone you hear sounds more like the short tone.</p>" +
+		            "<p>Press 'j' if you think the tone you hear sounds more like the long tone.</p>" +
+		            "<p>Press any key to begin.</p>"
+		};
+
+		//array for different test stimuli//
+		var test_stimuli = [
+		  { audio: "sound/1.5s.mp3"},
+		  { audio: "sound/2s.mp3"},
+      { audio: "sound/2.5s.mp3"},
+      { audio: "sound/3s.mp3"},
+      {audio: "sound/3.5s.mp3"}
+		];
+
+		//fixation cross for test (longer)//
+		var test_fixation = {
+		  type: 'html-keyboard-response',
+		  stimulus: '<div style="font-size:60px;">+</div>',
+		  choices: jsPsych.NO_KEYS,
+		  trial_duration: 3000
+		}
+
+    var stim = {
+      type: "audio-keyboard-response",
+      stimulus: jsPsych.timelineVariable('audio'),
+      choices: jsPsych.NO_KEYS,
+      prompt: "<div style='float: left;'><img src='img/blue.png'></img>",
+      trial_ends_after_audio: true
+    }
+
+    var trial = {
+      type: "html-keyboard-response",
+      stimulus: '',
+      choices: ['f', 'j'],
+      prompt: "<div style='float: left;'><img src='img/blue.png'></img>",
+    }
+
+		var test_procedure = {
+		  timeline: [test_fixation, stim, trial],
+		  timeline_variables: test_stimuli,
+		  repetitions: 3,
+		  randomize_order: true
+		}
+
+	  //end message//
+	    var ending = {
+	      	type: "html-keyboard-response",
+	      	stimulus: "<p>Thank you for participating in this game! You can go get your sticker and prize now!</p>"
+	    };
+
+      timeline.push(participant_info);
+      timeline.push(welcome);
+  		timeline.push(habituation_instructions);
+  		timeline.push(habituation_procedure);
+  		timeline.push(test_instructions);
+  		timeline.push(test_procedure);
+	    timeline.push(ending);
+
+		jsPsych.init({
+			timeline: timeline,
+			use_webaudio: false,
+			preload_audio: ['sound/1s.mp3', 'sound/1.5s.mp3', 'sound/2s.mp3', 'sound/2.5s.mp3', 'sound/3s.mp3', 'sound/3.5s.mp3', 'sound/4s.mp3'],
+		})
+	</script>
+</html>
