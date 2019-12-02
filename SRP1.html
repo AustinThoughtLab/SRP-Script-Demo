@@ -10,21 +10,23 @@
     </head>
     <body></body>
 	<script>
+    //next steps://
+      //get the file to save with participant_ID//
+      //get habituation audio to play at the same time as fixation cross//
 		//create timeline array//
 		var timeline = [];
 		//input and store particpant info//
 		var participant_info = {
 		  type: 'survey-text',
 		  questions: [
-		    {prompt: "Subject Number"},
-		    {prompt: "Participant ID"}
+        {prompt: "Subject Number", name: "subject_number"},
+		    {prompt: "Participant ID", name: "participant_ID"}
 		  ],
 		  on_finish: function(data){
 			  var responses = JSON.parse(data.responses);
 			  var subject_number = responses.Q0;
 			  var participant_id = responses.Q1;
 			  jsPsych.data.addProperties({subjectNumber: subject_number, participantID: participant_id});
-			  jsPsych.data.get().localSave('csv','subject_number.csv'); // Saves a file on the computer running the experiment. First localSave argument is the format, second is the filename.
 		  }
 		};
 
@@ -134,6 +136,9 @@
 			timeline: timeline,
 			use_webaudio: false,
 			preload_audio: ['sound/1s.mp3', 'sound/1.5s.mp3', 'sound/2s.mp3', 'sound/2.5s.mp3', 'sound/3s.mp3', 'sound/3.5s.mp3', 'sound/4s.mp3'],
+      on_finish: function(data){
+        jsPsych.data.get().localSave('csv','subject_number.csv'); // Saves a file on the computer running the experiment. First localSave argument is the format, second is the filename.
+      }
 		})
 	</script>
 </html>
