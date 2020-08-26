@@ -367,11 +367,13 @@
 
 		//array for different test stimuli//
 		var test_stimuli = [
+      {audio: "sound/1s.mp3",},
 		  {audio: "sound/1.5s.mp3"},
 		  {audio: "sound/2s.mp3"},
       {audio: "sound/2.5s.mp3"},
       {audio: "sound/3s.mp3"},
-      {audio: "sound/3.5s.mp3"}
+      {audio: "sound/3.5s.mp3"},
+      {audio: "sound/4s.mp3"}
 		];
 
     var stim = {
@@ -396,7 +398,7 @@
 		var test_setup = {
 		  timeline: [fixation, stim, trial],
 		  timeline_variables: test_stimuli,
-		  repetitions: 3,
+		  repetitions: 10,
 		  randomize_order: true
 		}
 
