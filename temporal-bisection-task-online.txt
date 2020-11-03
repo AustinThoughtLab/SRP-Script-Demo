@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>My experiment</title>
+		<script src="jspsych-6.0.5/jspsych.js"></script>
+		<script src="jspsych-6.0.5/plugins/jspsych-survey-text.js"></script>
+    <script src="jspsych-6.0.5/plugins/jspsych-survey-multi-choice.js"></script>
+		<script src="jspsych-6.0.5/plugins/jspsych-html-keyboard-response.js"></script>
+		<script src="jspsych-6.0.5/plugins/jspsych-audio-keyboard-response.js"></script>
+		<link href="jspsych-6.0.5/css/jspsych.css" rel="stylesheet" type="text/css"></link>
+    </head>
+    <body></body>
+	<script>
+    //next steps://
+      //get the file to save with participant_ID//
+      //get habituation audio to play at the same time as fixation cross//
+		//create timeline array//
+		var timeline = [];
+		//input and store particpant info//
+		var participant_info = {
+		  type: 'survey-text',
+		  questions: [
+        {prompt: "Subject Number", name: "subject_number"},
+		    {prompt: "Participant ID", name: "participant_ID"}
+      ],
+      on_finish: function(data){
+			  var responses = JSON.parse(data.responses);
+			  var subject_number = responses.Q0;
+			  var participant_id = responses.Q1;
+      //  var short_tone = responses.Q2;
+      //  var long_tone =  responses.Q3;
+			  jsPsych.data.addProperties(
+          {subjectNumber: subject_number,
+            participantID: participant_id,
+        //    shortTone: short_tone,
+        //    long_tone:longTone
+          }
+        )
+		  }
+		}
+
+    // randomly choose a version: 1 or 2
+    var version = jsPsych.randomization.sampleWithoutReplacement([1,2],1)[0];
+
+    //Manual condition assignment
+    //var shorty = 'f';
+    //var longy = 'j';
+
+    //welcome message//
+  	var welcome = {
+        type: 'html-keyboard-response',
+    		stimulus: 'Welcome to the experiment! Press any key to begin.'
+    	};
+
+    //description of what the subject is about to hear (pretraining)//
+    var pretraining_instructions = {
+    	type: "html-keyboard-response",
+      	stimulus: "<p>You are about to hear two types of sounds, a short sound and a long sound.</p>" +
+                "<p>After each sound, a screen will tell you what type of sound it was.</p>" +
+                "<p>Press any key to begin.</p>"
+    };
+
+    //pretraining phase: showing participants short tones and a long tones//
+    var pretraining_short = {
+      timeline:[
+        {
+          type: 'html-keyboard-response',
+          stimulus: 'This is a short sound.',
+          choices: jsPsych.NO_KEYS,
+          trial_duration: 1500
+        },
+        {
+          type: "audio-keyboard-response",
+          stimulus: "sound/1s.mp3",
+          choices: jsPsych.NO_KEYS,
+          prompt: "<div style='float: left;'><img src='img/blue.png'></img>",
+          trial_ends_after_audio: true
+        },
+        {
+          type: 'html-keyboard-response',
+          stimulus: '<div style="font-size:60px;">+</div>',
+          choices: jsPsych.NO_KEYS,
+          trial_duration: 3000
+        }
+      ]
+    }
+
+    var pretraining_long = {
+      timeline: [
+        {
+          type: 'html-keyboard-response',
+    		  stimulus: 'This is a long sound.',
+    		  choices: jsPsych.NO_KEYS,
+    		  trial_duration: 1500
+        },
+        {
+          type: "audio-keyboard-response",
+          stimulus: "sound/4s.mp3",
+          choices: jsPsych.NO_KEYS,
+          prompt: "<div style='float: left;'><img src='img/blue.png'></img>",
+          trial_ends_after_audio: true
+        },
+        {
+    		  type: 'html-keyboard-response',
+    		  stimulus: '<div style="font-size:60px;">+</div>',
+    		  choices: jsPsych.NO_KEYS,
+    		  trial_duration: 3000
+    		}
+      ]
+    }
+
+    var pretraining = {
+      timeline: [
+          pretraining_short,
+          pretraining_long,
+        ],
+      repetitions: 5
+    }
+
+    //training instructions//
+    var training_instructions_1_v1 = {
+      type: "html-keyboard-response",
+        stimulus: "<p>Now you're going to choose if the sound you hear is short or long.</p>" +
+                "<p>If you get it right, you'll see a happy cat. If you get it wrong, you'll see a sad cat.</p>" +
+                "<p>Press 'F' if you think the sound you hear sounds more like the short sound.</p>" +
+                "<p>Press 'J' if you think the sound you hear sounds more like the long sound.</p>" +
+                "<p>Press any key to begin.</p>"
+    };
+
+    var training_instructions_1_v2 = {
+      type: "html-keyboard-response",
+        stimulus: "<p>Now you're going to choose if the sound you hear is short or long.</p>" +
+                "<p>If you get it right, you'll see a happy cat. If you get it wrong, you'll see a sad cat.</p>" +
+                "<p>Press 'J' if you think the sound you hear sounds more like the short sound.</p>" +
+                "<p>Press 'F' if you think the sound you hear sounds more like the long sound.</p>" +
+                "<p>Press any key to begin.</p>"
+    };
+
+    // get the trial info for this version
+    var training_instructions_1;
+    if (version == 1) {
+        training_instructions_1 = training_instructions_1_v1;
+    } else {
+        training_instructions_1 = training_instructions_1_v2;
+    }
+
+    var fixation = {
+		  type: 'html-keyboard-response',
+		  stimulus: '<div style="font-size:60px;">+</div>',
+		  choices: jsPsych.NO_KEYS,
+		  trial_duration: function(){
+        return jsPsych.randomization.sampleWithReplacement([1000,1100,1200,1300,1400,1500,1600,1700,1800,1900,2000,2100,2200,2300,2400,2500,2600,2700,2800,2900,3000,3100,3200,3300,3400,3500,3600,3700,3800,3900,4000],1)[0];
+      }
+		}
+
+    var training_audio_v1 = [
+      {audio: "sound/1s.mp3", data: {stimulus_type: 'short', correct_response: 'F'}},
+      {audio: "sound/1s.mp3", data: {stimulus_type: 'short', correct_response: 'F'}},
+      {audio: "sound/1s.mp3", data: {stimulus_type: 'short', correct_response: 'F'}},
+      {audio: "sound/1s.mp3", data: {stimulus_type: 'short', correct_response: 'F'}},
+      {audio: "sound/4s.mp3", data: {stimulus_type: 'long', correct_response: 'J'}},
+      {audio: "sound/4s.mp3", data: {stimulus_type: 'long', correct_response: 'J'}},
+      {audio: "sound/4s.mp3", data: {stimulus_type: 'long', correct_response: 'J'}},
+      {audio: "sound/4s.mp3", data: {stimulus_type: 'long', correct_response: 'J'}},
+    ]; //note: the code is like this so each trial will have p=.5 of appearing rather than randomizing 1s and 4s in pairs of trials
+
+    var training_audio_v2 = [
+      {audio: "sound/1s.mp3", data: {stimulus_type: 'short', correct_response: 'J'}},
+      {audio: "sound/1s.mp3", data: {stimulus_type: 'short', correct_response: 'J'}},
+      {audio: "sound/1s.mp3", data: {stimulus_type: 'short', correct_response: 'J'}},
+      {audio: "sound/1s.mp3", data: {stimulus_type: 'short', correct_response: 'J'}},
+      {audio: "sound/4s.mp3", data: {stimulus_type: 'long', correct_response: 'F'}},
+      {audio: "sound/4s.mp3", data: {stimulus_type: 'long', correct_response: 'F'}},
+      {audio: "sound/4s.mp3", data: {stimulus_type: 'long', correct_response: 'F'}},
+      {audio: "sound/4s.mp3", data: {stimulus_type: 'long', correct_response: 'F'}},
+    ]; //note: the code is like this so each trial will have p=.5 of appearing rather than randomizing 1s and 4s in pairs of trials
+
+    var training_audio;
+        if (version == 1) {
+          training_audio = training_audio_v1;
+      } else {
+          training_audio = training_audio_v2;
+      }
+
+
+    var training_stim = {
+      type: "audio-keyboard-response",
+      stimulus: jsPsych.timelineVariable('audio'),
+      choices: jsPsych.NO_KEYS,
+      prompt: "<div style='float: left;'><img src='img/blue.png'></img>",
+      trial_ends_after_audio: true
+    }
+
+    var training_trial = {
+      type: "html-keyboard-response",
+      stimulus: '',
+      choices: ['F', 'J'],
+      prompt: "<p>Short or long?</p>",
+        data: jsPsych.timelineVariable('data'),
+        on_finish: function(data){
+          data.responses = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(data.key_press);
+          data.correct = data.key_press == jsPsych.pluginAPI.convertKeyCharacterToKeyCode(data.correct_response);
+        },
+    }
+
+    var feedback = {
+      type: 'html-keyboard-response',
+      choices: jsPsych.NO_KEYS,
+      stimulus: function(){
+        var last_trial_correct = jsPsych.data.get().last(1).values()[0].correct;
+        if(last_trial_correct){
+          return "<div style='float: left;'><img src='img/cathappy.png'></img>"
+        } else {
+          return "<div style='float: left;'><img src='img/catsad.png'></img>"
+        }
+      },
+      trial_duration: 2000
+    }
+
+    var training_1 = {
+      timeline: [fixation, training_stim, training_trial, feedback],
+      timeline_variables: training_audio,
+      repetitions: 1,
+      randomize_order: true
+      }
+
+    // get the trial info for this version
+    var training_instructions_2_setup_v1 = {
+      type: "html-keyboard-response",
+        stimulus: "<p>Good job! We're going to try that again.</p>" +
+                "<p>You're going to choose if the sound you hear is short or long.</p>" +
+                "<p>If you get it right, you'll see a happy cat. If you get it wrong, you'll see a sad cat.</p>" +
+                "<p>Press 'F' if you think the sound you hear sounds more like the short sound.</p>" +
+                "<p>Press 'J' if you think the sound you hear sounds more like the long sound.</p>" +
+                "<p>Press any key to begin.</p>"
+    };
+
+    var training_instructions_2_setup_v2 = {
+      type: "html-keyboard-response",
+        stimulus: "<p>Good job! We're going to try that again.</p>" +
+                "<p>You're going to choose if the sound you hear is short or long.</p>" +
+                "<p>If you get it right, you'll see a happy cat. If you get it wrong, you'll see a sad cat.</p>" +
+                "<p>Press 'J' if you think the sound you hear sounds more like the short sound.</p>" +
+                "<p>Press 'F' if you think the sound you hear sounds more like the long sound.</p>" +
+                "<p>Press any key to begin.</p>"
+    };
+
+    var training_instructions_2_setup;
+        if (version == 1) {
+          training_instructions_2_setup = training_instructions_2_setup_v1;
+      } else {
+          training_instructions_2_setup = training_instructions_2_setup_v2;
+      }
+
+    var training_instructions_2 = {
+        timeline: [training_instructions_2_setup],
+        conditional_function: function(){
+          var block1 = jsPsych.data.get().filter([{correct:true},{correct:false}]).last(8).filter({correct:true}).count() == 8;
+          if(block1){
+              return false;
+          } else {
+              return true;
+          }
+      }
+  }
+
+    var training_2 = {
+        timeline: [training_1],
+        conditional_function: function(){
+          var block1 = jsPsych.data.get().filter([{correct:true},{correct:false}]).last(8).filter({correct:true}).count() == 8;
+          if(block1){
+              return false;
+          } else {
+              return true;
+          }
+        }
+      }
+
+      // get the trial info for this version
+    var training_instructions_3_setup_v1 = {
+      type: "html-keyboard-response",
+        stimulus: "<p>Good job! We're going to try that one more time.</p>" +
+                "<p>You're going to choose if the sound you hear is short or long.</p>" +
+                "<p>If you get it right, you'll see a happy cat. If you get it wrong, you'll see a sad cat.</p>" +
+                "<p>Press 'F' if you think the sound you hear sounds more like the short sound.</p>" +
+                "<p>Press 'J' if you think the sound you hear sounds more like the long sound.</p>" +
+                "<p>Press any key to begin.</p>"
+              };
+
+    var training_instructions_3_setup_v2 = {
+      type: "html-keyboard-response",
+        stimulus: "<p>Good job! We're going to try that one more time.</p>" +
+                "<p>You're going to choose if the sound you hear is short or long.</p>" +
+                "<p>If you get it right, you'll see a happy cat. If you get it wrong, you'll see a sad cat.</p>" +
+                "<p>Press 'J' if you think the sound you hear sounds more like the short sound.</p>" +
+                "<p>Press 'F' if you think the sound you hear sounds more like the long sound.</p>" +
+                "<p>Press any key to begin.</p>"
+              };
+
+    var training_instructions_3_setup;
+    if (version == 1) {
+      training_instructions_3_setup = training_instructions_3_setup_v1;
+    } else {
+      training_instructions_3_setup = training_instructions_3_setup_v2;
+    }
+
+    var training_instructions_3 = {
+        timeline: [training_instructions_3_setup],
+        conditional_function: function(){
+          var block2 = jsPsych.data.get().filter([{correct:true},{correct:false}]).last(8).filter({correct:true}).count() == 8;
+          if(block2){
+              return false;
+            } else {
+              return true;
+            }
+          }
+        }
+
+    var training_3 = {
+        timeline: [training_1],
+        conditional_function: function(){
+          var block2 = jsPsych.data.get().filter([{correct:true},{correct:false}]).last(8).filter({correct:true}).count() == 8;
+          if(block2){
+            return false;
+            } else {
+              return true;
+            }
+          }
+        }
+
+		//test instructions: description of what the subject is about to hear//
+    // get the trial info for this version
+		var test_instructions_setup_v1 = {
+		  type: "html-keyboard-response",
+		    stimulus: "<p>Now you're going to choose if the sound you hear is short or long.</p>" +
+		            "<p>Press 'F' if you think the sound you hear sounds more like the short sound.</p>" +
+		            "<p>Press 'J' if you think the sound you hear sounds more like the long sound.</p>" +
+		            "<p>Press any key to begin.</p>"
+              };
+
+    var test_instructions_setup_v2 = {
+		  type: "html-keyboard-response",
+		    stimulus: "<p>Now you're going to choose if the sound you hear is short or long.</p>" +
+		            "<p>Press 'J' if you think the sound you hear sounds more like the short sound.</p>" +
+		            "<p>Press 'F' if you think the sound you hear sounds more like the long sound.</p>" +
+		            "<p>Press any key to begin.</p>"
+              };
+
+    var test_instructions_setup;
+    if (version == 1) {
+      test_instructions_setup = test_instructions_setup_v1;
+    } else {
+      test_instructions_setup = test_instructions_setup_v2;
+    }
+
+    var test_instructions = {
+        timeline: [test_instructions_setup],
+        conditional_function: function(){
+          var block3 = jsPsych.data.get().filter([{correct:true},{correct:false}]).last(8).filter({correct:true}).count() == 8;
+          if(block3){
+            return true;
+            } else {
+              return false;
+            }
+          }
+        }
+
+		//array for different test stimuli//
+		var test_stimuli = [
+      {audio: "sound/1s.mp3",},
+		  {audio: "sound/1.5s.mp3"},
+		  {audio: "sound/2s.mp3"},
+      {audio: "sound/2.5s.mp3"},
+      {audio: "sound/3s.mp3"},
+      {audio: "sound/3.5s.mp3"},
+      {audio: "sound/4s.mp3"}
+		];
+
+    var stim = {
+      type: "audio-keyboard-response",
+      stimulus: jsPsych.timelineVariable('audio'),
+      choices: jsPsych.NO_KEYS,
+      prompt: "<div style='float: left;'><img src='img/blue.png'></img>",
+      trial_ends_after_audio: true
+    }
+
+    var trial = {
+      type: "html-keyboard-response",
+      stimulus: '',
+      choices: ['F', 'J'],
+      prompt: "<p>Short or long?</p>",
+        data: jsPsych.timelineVariable('data'),
+        on_finish: function(data){
+          data.responses = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(data.key_press);
+        }
+    }
+
+		var test_setup = {
+		  timeline: [fixation, stim, trial],
+		  timeline_variables: test_stimuli,
+		  repetitions: 10,
+		  randomize_order: true
+		}
+
+    var test = {
+        timeline: [test_setup],
+        conditional_function: function(){
+          var block3 = jsPsych.data.get().filter([{correct:true},{correct:false}]).last(8).filter({correct:true}).count() == 8;
+          if(block3){
+            return true;
+            } else {
+              return false;
+            }
+        }
+    }
+
+	  //end message//
+	  var ending = {
+	   	type: "html-keyboard-response",
+	   	stimulus: "<p>Thank you for participating in this game! You can go get your sticker and prize now!</p>"
+	  };
+
+    timeline.push(participant_info);
+    timeline.push(welcome);
+    timeline.push(pretraining_instructions);
+    timeline.push(pretraining);
+    timeline.push(training_instructions_1)
+    timeline.push(training_1)
+    timeline.push(training_instructions_2)
+    timeline.push(training_2)
+    timeline.push(training_instructions_3)
+    timeline.push(training_3)
+    timeline.push(test_instructions);
+  	timeline.push(test);
+	  timeline.push(ending);
+
+		jsPsych.init({
+			timeline: timeline,
+			use_webaudio: false,
+			preload_audio: ['sound/1s.mp3', 'sound/1.5s.mp3', 'sound/2s.mp3', 'sound/2.5s.mp3', 'sound/3s.mp3', 'sound/3.5s.mp3', 'sound/4s.mp3'],
+      on_finish: function(data){
+        jsPsych.data.get().localSave('csv','subject_number.csv'); // Saves a file on the computer running the experiment. First localSave argument is the format, second is the filename.
+      }
+		})
+	</script>
+</html>
