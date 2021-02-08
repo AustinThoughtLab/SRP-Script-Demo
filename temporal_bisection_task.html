@@ -65,9 +65,7 @@
       timeline:[
         {
           type: 'html-keyboard-response',
-          stimulus: 'This is a short sound.',
-          choices: jsPsych.NO_KEYS,
-          trial_duration: 1500
+          stimulus: 'This is a short sound.'
         },
         {
           type: "audio-keyboard-response",
@@ -80,7 +78,7 @@
           type: 'html-keyboard-response',
           stimulus: '<div style="font-size:60px;">+</div>',
           choices: jsPsych.NO_KEYS,
-          trial_duration: 3000
+          trial_duration: 2000
         }
       ]
     }
@@ -89,9 +87,7 @@
       timeline: [
         {
           type: 'html-keyboard-response',
-    		  stimulus: 'This is a long sound.',
-    		  choices: jsPsych.NO_KEYS,
-    		  trial_duration: 1500
+    		  stimulus: 'This is a long sound.'
         },
         {
           type: "audio-keyboard-response",
@@ -104,7 +100,7 @@
     		  type: 'html-keyboard-response',
     		  stimulus: '<div style="font-size:60px;">+</div>',
     		  choices: jsPsych.NO_KEYS,
-    		  trial_duration: 3000
+    		  trial_duration: 2000
     		}
       ]
     }
@@ -191,16 +187,39 @@
       trial_ends_after_audio: true
     }
 
-    var training_trial = {
+    var training_trial_v1 = {
       type: "html-keyboard-response",
       stimulus: '',
       choices: ['F', 'J'],
-      prompt: "<p>Short or long?</p>",
+      prompt: "<p>Short or long?</p>" +
+              "<p>Short = F</p>" +
+              "<p>Long = J</p>",
         data: jsPsych.timelineVariable('data'),
         on_finish: function(data){
           data.responses = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(data.key_press);
           data.correct = data.key_press == jsPsych.pluginAPI.convertKeyCharacterToKeyCode(data.correct_response);
         },
+    }
+
+    var training_trial_v2 = {
+      type: "html-keyboard-response",
+      stimulus: '',
+      choices: ['F', 'J'],
+      prompt: "<p>Short or long?</p>" +
+              "<p>Short = J</p>" +
+              "<p>Long = F</p>",
+        data: jsPsych.timelineVariable('data'),
+        on_finish: function(data){
+          data.responses = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(data.key_press);
+          data.correct = data.key_press == jsPsych.pluginAPI.convertKeyCharacterToKeyCode(data.correct_response);
+        },
+    }
+
+    var training_trial;
+    if (version == 1) {
+        training_trial = training_trial_v1;
+    } else {
+        training_trial = training_trial_v2;
     }
 
     var feedback = {
@@ -384,15 +403,37 @@
       trial_ends_after_audio: true
     }
 
-    var trial = {
+    var trial_v1 = {
       type: "html-keyboard-response",
       stimulus: '',
       choices: ['F', 'J'],
-      prompt: "<p>Short or long?</p>",
+      prompt: "<p>Short or long?</p>" +
+              "<p>Short = F</p>" +
+              "<p>Long = J</p>",
         data: jsPsych.timelineVariable('data'),
         on_finish: function(data){
           data.responses = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(data.key_press);
         }
+    }
+
+    var trial_v2 = {
+      type: "html-keyboard-response",
+      stimulus: '',
+      choices: ['F', 'J'],
+      prompt: "<p>Short or long?</p>" +
+              "<p>Short = J</p>" +
+              "<p>Long = F</p>",
+        data: jsPsych.timelineVariable('data'),
+        on_finish: function(data){
+          data.responses = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(data.key_press);
+        }
+    }
+
+    var trial;
+    if (version == 1) {
+        trial = trial_v1;
+    } else {
+        trial = trial_v2;
     }
 
 		var test_setup = {
