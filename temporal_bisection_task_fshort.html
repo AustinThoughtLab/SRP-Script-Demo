@@ -57,7 +57,7 @@
     	type: "html-keyboard-response",
       	stimulus: "<p>You are about to hear two types of sounds, a short sound and a long sound.</p>" +
                 "<p>After each sound, a screen will tell you what type of sound it was.</p>" +
-                "<p>Press any key to begin.</p>"
+                "<p>[Press any key to begin.]</p>"
     };
 
     //pretraining phase: showing participants short tones and a long tones//
@@ -120,7 +120,7 @@
                 "<p>If you get it right, you'll see a happy cat. If you get it wrong, you'll see a sad cat.</p>" +
                 //"<p>Press 'F' if you think the sound you hear sounds more like the short sound.</p>" +
                 //"<p>Press 'J' if you think the sound you hear sounds more like the long sound.</p>" +
-                "<p>Press any key to begin.</p>"
+                "<p>[Press any key to begin.]</p>"
     };
 
     var training_instructions_1_v2 = {
@@ -129,7 +129,7 @@
                 "<p>If you get it right, you'll see a happy cat. If you get it wrong, you'll see a sad cat.</p>" +
                 //"<p>Press 'J' if you think the sound you hear sounds more like the short sound.</p>" +
                 //"<p>Press 'F' if you think the sound you hear sounds more like the long sound.</p>" +
-                "<p>Press any key to begin.</p>"
+                "<p>[Press any key to begin.]</p>"
     };
 
     // get the trial info for this version
@@ -192,8 +192,8 @@
       stimulus: '',
       choices: ['F', 'J'],
       prompt: "<p>Short or long?</p>" +
-              "<p>Short = F</p>" +
-              "<p>Long = J</p>",
+              "<p>[Short = F]</p>" +
+              "<p>[Long = J]</p>",
         data: jsPsych.timelineVariable('data'),
         on_finish: function(data){
           data.responses = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(data.key_press);
@@ -206,8 +206,8 @@
       stimulus: '',
       choices: ['F', 'J'],
       prompt: "<p>Short or long?</p>" +
-              "<p>Short = J</p>" +
-              "<p>Long = F</p>",
+              "<p>[Short = J]</p>" +
+              "<p>[Long = F]</p>",
         data: jsPsych.timelineVariable('data'),
         on_finish: function(data){
           data.responses = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(data.key_press);
@@ -251,7 +251,7 @@
                 "<p>If you get it right, you'll see a happy cat. If you get it wrong, you'll see a sad cat.</p>" +
                 //"<p>Press 'F' if you think the sound you hear sounds more like the short sound.</p>" +
                 //"<p>Press 'J' if you think the sound you hear sounds more like the long sound.</p>" +
-                "<p>Press any key to begin.</p>"
+                "<p>[Press any key to begin.]</p>"
     };
 
     var training_instructions_2_setup_v2 = {
@@ -261,7 +261,7 @@
                 "<p>If you get it right, you'll see a happy cat. If you get it wrong, you'll see a sad cat.</p>" +
                 //"<p>Press 'J' if you think the sound you hear sounds more like the short sound.</p>" +
                 //"<p>Press 'F' if you think the sound you hear sounds more like the long sound.</p>" +
-                "<p>Press any key to begin.</p>"
+                "<p>[Press any key to begin.]</p>"
     };
 
     var training_instructions_2_setup;
@@ -303,7 +303,7 @@
                 "<p>If you get it right, you'll see a happy cat. If you get it wrong, you'll see a sad cat.</p>" +
                 //"<p>Press 'F' if you think the sound you hear sounds more like the short sound.</p>" +
                 //"<p>Press 'J' if you think the sound you hear sounds more like the long sound.</p>" +
-                "<p>Press any key to begin.</p>"
+                "<p>[Press any key to begin.]</p>"
               };
 
     var training_instructions_3_setup_v2 = {
@@ -313,7 +313,7 @@
                 "<p>If you get it right, you'll see a happy cat. If you get it wrong, you'll see a sad cat.</p>" +
                 //"<p>Press 'J' if you think the sound you hear sounds more like the short sound.</p>" +
                 //"<p>Press 'F' if you think the sound you hear sounds more like the long sound.</p>" +
-                "<p>Press any key to begin.</p>"
+                "<p>[Press any key to begin.]</p>"
               };
 
     var training_instructions_3_setup;
@@ -354,7 +354,7 @@
 		    stimulus: "<p>Now you're going to choose if the sound you hear is short or long.</p>" +
 		            //"<p>Press 'F' if you think the sound you hear sounds more like the short sound.</p>" +
 		            //"<p>Press 'J' if you think the sound you hear sounds more like the long sound.</p>" +
-		            "<p>Press any key to begin.</p>"
+		            "<p>[Press any key to begin.]</p>"
               };
 
     var test_instructions_setup_v2 = {
@@ -362,7 +362,7 @@
 		    stimulus: "<p>Now you're going to choose if the sound you hear is short or long.</p>" +
 		            //"<p>Press 'J' if you think the sound you hear sounds more like the short sound.</p>" +
 		            //"<p>Press 'F' if you think the sound you hear sounds more like the long sound.</p>" +
-		            "<p>Press any key to begin.</p>"
+		            "<p>[Press any key to begin.]</p>"
               };
 
     var test_instructions_setup;
@@ -408,8 +408,8 @@
       stimulus: '',
       choices: ['F', 'J'],
       prompt: "<p>Short or long?</p>" +
-              "<p>Short = F</p>" +
-              "<p>Long = J</p>",
+              "<p>[Short = F]</p>" +
+              "<p>[Long = J]</p>",
         data: jsPsych.timelineVariable('data'),
         on_finish: function(data){
           data.responses = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(data.key_press);
@@ -421,8 +421,8 @@
       stimulus: '',
       choices: ['F', 'J'],
       prompt: "<p>Short or long?</p>" +
-              "<p>Short = J</p>" +
-              "<p>Long = F</p>",
+              "<p>[Short = J]</p>" +
+              "<p>[Long = F]</p>",
         data: jsPsych.timelineVariable('data'),
         on_finish: function(data){
           data.responses = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(data.key_press);
