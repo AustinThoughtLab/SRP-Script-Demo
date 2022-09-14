@@ -17,20 +17,21 @@
 		//create timeline array//
 		var timeline = [];
 		//input and store particpant info//
-		var participant_info = {
+    var participant_info = {
 		  type: 'survey-text',
 		  questions: [
-        {prompt: "Subject Number", name: "subject_number"},
+        {prompt: "Participant name", name: "participant_name"},
 		    {prompt: "Participant ID", name: "participant_ID"}
       ],
+      data: {task_part: 'id_question'},
       on_finish: function(data){
 			  var responses = JSON.parse(data.responses);
-			  var subject_number = responses.Q0;
+			  var participant_name = responses.Q0;
 			  var participant_id = responses.Q1;
       //  var short_tone = responses.Q2;
       //  var long_tone =  responses.Q3;
 			  jsPsych.data.addProperties(
-          {subjectNumber: subject_number,
+          {participantName: participant_name,
             participantID: participant_id,
         //    shortTone: short_tone,
         //    long_tone:longTone
@@ -406,26 +407,38 @@
     var trial_v1 = {
       type: "html-keyboard-response",
       stimulus: '',
-      choices: ['F', 'J'],
+      choices: ['F', 'J', '0'],
       prompt: "<p>Short or long?</p>" +
               "<p>[Short = F]</p>" +
               "<p>[Long = J]</p>",
         data: jsPsych.timelineVariable('data'),
         on_finish: function(data){
           data.responses = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(data.key_press);
+          var id = jsPsych.data.get().filter({task_part: 'id_question'}).values()[0].participantID;
+          var file_name = 'SRP_' + id + '.csv';
+          if(jsPsych.pluginAPI.compareKeys(data.responses, "0")){
+            jsPsych.endExperiment("<p>Thank you for participating in this game!</p>"),
+            jsPsych.data.get().localSave('csv',file_name);
+          }
         }
-    }
+      }
 
     var trial_v2 = {
       type: "html-keyboard-response",
       stimulus: '',
-      choices: ['F', 'J'],
+      choices: ['F', 'J', '0'],
       prompt: "<p>Short or long?</p>" +
               "<p>[Short = J]</p>" +
               "<p>[Long = F]</p>",
         data: jsPsych.timelineVariable('data'),
         on_finish: function(data){
           data.responses = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(data.key_press);
+          var id = jsPsych.data.get().filter({task_part: 'id_question'}).values()[0].participantID;
+          var file_name = 'SRP_' + id + '.csv';
+          if(jsPsych.pluginAPI.compareKeys(data.responses, "0")){
+            jsPsych.endExperiment("<p>Thank you for participating in this game!</p>"),
+            jsPsych.data.get().localSave('csv',file_name);
+          }
         }
     }
 
@@ -456,9 +469,14 @@
     }
 
 	  //end message//
-	  var ending = {
+    var ending = {
 	   	type: "html-keyboard-response",
-	   	stimulus: "<p>Thank you for participating in this game! You can go get your sticker and prize now!</p>"
+	   	stimulus: "<p>Thank you for participating in this game!</p>",
+      on_start: function(data){
+        var id = jsPsych.data.get().filter({task_part: 'id_question'}).values()[0].participantID;
+        var file_name = 'SRP_' + id + '.csv';
+        jsPsych.data.get().localSave('csv',file_name); // Saves a file on the computer running the experiment. First localSave argument is the format, second is the filename.
+      }
 	  };
 
     timeline.push(participant_info);
@@ -478,10 +496,7 @@
 		jsPsych.init({
 			timeline: timeline,
 			use_webaudio: false,
-			preload_audio: ['sound/1s.mp3', 'sound/1.5s.mp3', 'sound/2s.mp3', 'sound/2.5s.mp3', 'sound/3s.mp3', 'sound/3.5s.mp3', 'sound/4s.mp3'],
-      on_finish: function(data){
-        jsPsych.data.get().localSave('csv','subject_number.csv'); // Saves a file on the computer running the experiment. First localSave argument is the format, second is the filename.
-      }
+			preload_audio: ['sound/1s.mp3', 'sound/1.5s.mp3', 'sound/2s.mp3', 'sound/2.5s.mp3', 'sound/3s.mp3', 'sound/3.5s.mp3', 'sound/4s.mp3']
 		})
 	</script>
 </html>
