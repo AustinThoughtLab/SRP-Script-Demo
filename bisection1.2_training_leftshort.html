@@ -41,7 +41,7 @@
 		}
 
     // randomly choose a version: 1 or 2
-    var version = 2;
+    var version = 1;
 
     //Manual condition assignment
     //var shorty = 'f';
@@ -411,7 +411,7 @@
       stimulus: '',
       choices: ['F', 'J', '0', '1'],
       prompt: "<p>Was that the short circle or the long circle?</p>",
-              //"<p>[Short = F]</p>"
+              //"<p>[Short = F]</p>" +
               //"<p>[Long = J]</p>",
         data: jsPsych.timelineVariable('data'),
         on_finish: function(data){
@@ -429,8 +429,8 @@
       type: "html-keyboard-response",
       stimulus: '',
       choices: ['F', 'J', '0', '1'],
-      prompt: "<p>Was that the short circle or the right circle?</p>",
-              //"<p>[Short = J]</p>" +
+      prompt: "<p>Short or long?</p>",
+              //"<p>[Short = J]</p>"
               //"<p>[Long = F]</p>",
         data: jsPsych.timelineVariable('data'),
         on_finish: function(data){
