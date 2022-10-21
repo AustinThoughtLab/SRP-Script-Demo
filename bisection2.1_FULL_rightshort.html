@@ -429,9 +429,9 @@
       type: "html-keyboard-response",
       stimulus: '',
       choices: ['F', 'J', '0', '1'],
-      prompt: "<p>Short or long?</p>" +
-              "<p>[Short = J]</p>" +
-              "<p>[Long = F]</p>",
+      prompt: "<p>Was that the short circle or the long circle?</p>",
+              //"<p>[Short = J]</p>" +
+              //"<p>[Long = F]</p>",
         data: jsPsych.timelineVariable('data'),
         on_finish: function(data){
           data.responses = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(data.key_press);
